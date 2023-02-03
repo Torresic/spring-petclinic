@@ -46,7 +46,10 @@ public class PetClinicApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PetClinicApplication.class, args);
 	}
-
+	
+	
+	// Failed to execute CommandLineRunner
+	// Table 'petclinic.vets_basic' doesn't exist
 	@Bean
 	public CommandLineRunner demoVetRepository(VetWithoutSpecialtyRepository vetWithoutSpecialtyRepository) {
 		return (args) -> {
