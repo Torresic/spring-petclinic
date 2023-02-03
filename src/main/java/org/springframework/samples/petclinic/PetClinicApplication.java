@@ -23,6 +23,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportRuntimeHints;
 import org.springframework.samples.petclinic.vet.SpecialtyRepository;
 import org.springframework.samples.petclinic.vet.VetRepository;
+import org.springframework.samples.petclinic.vet.VetWithoutSpecialty;
+import org.springframework.samples.petclinic.vet.VetWithoutSpecialtyRepository;
 
 /**
  * PetClinic Spring Boot Application.
@@ -35,21 +37,28 @@ import org.springframework.samples.petclinic.vet.VetRepository;
 public class PetClinicApplication {
 
 	/*
-	 * 1. Crear objeto Vet sin Speciality
-	 * 2. Persistir el objeto Vet en BBDD
-	 * 3. Consultar por ID y comprobar que se ha creado correctamente
-	 * 4. Editar el elemento recién creado para añadir una Speciality concreta
-	 * 5. Listar todos los veterinarios existentes.
+	 * 1. Crear objeto Vet sin Speciality 2. Persistir el objeto Vet en BBDD 3. Consultar
+	 * por ID y comprobar que se ha creado correctamente 4. Editar el elemento recién
+	 * creado para añadir una Speciality concreta 5. Listar todos los veterinarios
+	 * existentes.
 	 */
-	
+
 	public static void main(String[] args) {
 		SpringApplication.run(PetClinicApplication.class, args);
 	}
-	
+
 	@Bean
-	public CommandLineRunner demoVetRepository(VetRepository vetRepository, SpecialtyRepository specialtyRepository) {
-		return(args) -> {
-			
+	public CommandLineRunner demoVetRepository(VetWithoutSpecialtyRepository vetWithoutSpecialtyRepository) {
+		return (args) -> {
+			VetWithoutSpecialty vetWithoutSpecialty = new VetWithoutSpecialty();
+			vetWithoutSpecialty.setFirstName("John");
+			vetWithoutSpecialty.setLastName("Doe");
+
+			vetWithoutSpecialtyRepository.save(vetWithoutSpecialty);
+
+			VetWithoutSpecialty vet = vetWithoutSpecialtyRepository.findById(vetWithoutSpecialty.getId()).get();
+			System.out.println("Vet created: " + vet.getFirstName() + " " + vet.getLastName());
+
 		};
 	}
 
