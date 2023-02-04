@@ -17,6 +17,7 @@ package org.springframework.samples.petclinic.pet;
 
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.owner.Owner;
 import org.springframework.samples.petclinic.owner.OwnerRepository;
 import org.springframework.stereotype.Controller;
@@ -38,13 +39,9 @@ import jakarta.validation.Valid;
  * @author Dave Syer
  */
 @Controller
-class VisitController {
-
-	private final OwnerRepository owners;
-
-	public VisitController(OwnerRepository owners) {
-		this.owners = owners;
-	}
+public class VisitController {
+	@Autowired
+	VisitService visitService;
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
@@ -55,21 +52,14 @@ class VisitController {
 	 * Called before each and every @RequestMapping annotated method. 2 goals: - Make sure
 	 * we always have fresh data - Since we do not use the session scope, make sure that
 	 * Pet object always has an id (Even though id is not part of the form fields)
+	 *
 	 * @param petId
 	 * @return Pet
 	 */
 	@ModelAttribute("visit")
 	public Visit loadPetWithVisit(@PathVariable("ownerId") int ownerId, @PathVariable("petId") int petId,
-			Map<String, Object> model) {
-		Owner owner = this.owners.findById(ownerId);
-
-		Pet pet = owner.getPet(petId);
-		model.put("pet", pet);
-		model.put("owner", owner);
-
-		Visit visit = new Visit();
-		pet.addVisit(visit);
-		return visit;
+								  Map<String, Object> model) {
+		return visitService.loadPetWithVisit(ownerId, petId, model);
 	}
 
 	// Spring MVC calls method loadPetWithVisit(...) before initNewVisitForm is
@@ -83,14 +73,9 @@ class VisitController {
 	// called
 	@PostMapping("/owners/{ownerId}/pets/{petId}/visits/new")
 	public String processNewVisitForm(@ModelAttribute Owner owner, @PathVariable int petId, @Valid Visit visit,
-			BindingResult result) {
-		if (result.hasErrors()) {
-			return "pets/createOrUpdateVisitForm";
-		}
+									  BindingResult result) {
+		return visitService.processNewVisitForm(owner, petId, visit, result);
 
-		owner.addVisit(petId, visit);
-		this.owners.save(owner);
-		return "redirect:/owners/{ownerId}";
 	}
 
 }

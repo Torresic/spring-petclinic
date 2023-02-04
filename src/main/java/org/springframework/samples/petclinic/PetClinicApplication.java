@@ -19,12 +19,14 @@ package org.springframework.samples.petclinic;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportRuntimeHints;
+import org.springframework.samples.petclinic.vet.Specialty;
 import org.springframework.samples.petclinic.vet.SpecialtyRepository;
+import org.springframework.samples.petclinic.vet.Vet;
 import org.springframework.samples.petclinic.vet.VetRepository;
-import org.springframework.samples.petclinic.vet.VetWithoutSpecialty;
-import org.springframework.samples.petclinic.vet.VetWithoutSpecialtyRepository;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * PetClinic Spring Boot Application.
@@ -32,6 +34,7 @@ import org.springframework.samples.petclinic.vet.VetWithoutSpecialtyRepository;
  * @author Dave Syer
  *
  */
+@Slf4j
 @SpringBootApplication
 @ImportRuntimeHints(PetClinicRuntimeHints.class)
 public class PetClinicApplication {
@@ -46,21 +49,36 @@ public class PetClinicApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PetClinicApplication.class, args);
 	}
-	
-	
+
 	// Failed to execute CommandLineRunner
 	// Table 'petclinic.vets_basic' doesn't exist
 	@Bean
-	public CommandLineRunner demoVetRepository(VetWithoutSpecialtyRepository vetWithoutSpecialtyRepository) {
+	public CommandLineRunner demoVetRepository(VetRepository vetRepository, SpecialtyRepository specialtyRepository) {
 		return (args) -> {
-			VetWithoutSpecialty vetWithoutSpecialty = new VetWithoutSpecialty();
-			vetWithoutSpecialty.setFirstName("John");
-			vetWithoutSpecialty.setLastName("Doe");
-
-			vetWithoutSpecialtyRepository.save(vetWithoutSpecialty);
-
-			VetWithoutSpecialty vet = vetWithoutSpecialtyRepository.findById(vetWithoutSpecialty.getId()).get();
-			System.out.println("Vet created: " + vet.getFirstName() + " " + vet.getLastName());
+			log.info("*****************************************************");
+			log.info("BOOTCAMP - Spring y Spring Data - vetRepository");
+			log.info("*****************************************************");
+			log.info("Creamos un objeto Vet");
+			Vet vet = new Vet();
+			vet.setFirstName("Sergio");
+			vet.setLastName("Raposo Vargas");
+			log.info("Tienes id ? " + vet.getId());
+			log.info("Persistimos en BBDD");
+			vetRepository.save(vet);
+			log.info("Comprobamos que se ha creado correctamente");
+			Vet vetAux = vetRepository.findById(vet.getId());
+			log.info(vetAux.toString());
+			log.info("Editamos el objeto y añadimos una Speciality");
+			/*Specialty s = specialtyRepository.findById(1);
+			log.info("Vet: " + s);
+			vet.addSpecialty(s);*/
+			vetRepository.save(vet);
+			log.info(vet.toString());
+			log.info("Listamos todos los veterinarios");
+			for (Vet v : vetRepository.findAll()) {
+				log.info("Vet: " + v.getFirstName());
+				System.out.println("Vet: " + v.getFirstName());
+			}
 
 		};
 	}

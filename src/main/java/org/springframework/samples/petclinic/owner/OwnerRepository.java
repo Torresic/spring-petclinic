@@ -36,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Sam Brannen
  * @author Michael Isvy
  */
+
 public interface OwnerRepository extends Repository<Owner, Integer> {
 
 	/**
