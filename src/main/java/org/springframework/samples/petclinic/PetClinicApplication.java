@@ -16,6 +16,7 @@
 
 package org.springframework.samples.petclinic;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,9 +26,13 @@ import org.springframework.context.annotation.ImportRuntimeHints;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.samples.petclinic.pet.Pet;
+import org.springframework.samples.petclinic.pet.PetService;
+import org.springframework.samples.petclinic.pet.VisitService;
 import org.springframework.samples.petclinic.vet.*;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDate;
 import java.util.stream.Collectors;
 
 /**
@@ -41,6 +46,12 @@ import java.util.stream.Collectors;
 @ImportRuntimeHints(PetClinicRuntimeHints.class)
 public class PetClinicApplication {
 	private final VetService vetService;
+
+	@Autowired
+	PetService petService;
+
+	@Autowired
+	VisitService visitService;
 
 	public PetClinicApplication(VetService vetService) {
 		this.vetService = vetService;
@@ -86,7 +97,13 @@ public class PetClinicApplication {
 				log.info("Vet: " + v.getFirstName());
 				System.out.println("Vet: " + v.getFirstName());
 			} */
-			
+			Pet pet1 = petService.findById(1L);
+			Pet pet2 = petService.findById(2L);
+			Pet pet3 = petService.findById(3L);
+
+			visitService.addVisit(pet1, LocalDate.now(), "Vacunación");
+			visitService.addVisit(pet2, LocalDate.now(), "Consulta");
+			visitService.addVisit(pet3, LocalDate.now(), "Cirugía");
 		};
 	}
 

@@ -16,13 +16,12 @@
 package org.springframework.samples.petclinic.pet;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.owner.Owner;
-import org.springframework.samples.petclinic.owner.OwnerRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -92,5 +91,10 @@ public class PetController {
 	public String processUpdateForm(@Valid Pet pet, BindingResult result, Owner owner, ModelMap model) {
 		return petService.processUpdateForm(pet, result, owner, model);
 	}
+
+	/*@GetMapping("/petsById")
+	public List<Visit> getVisitsByPetId() {
+		return petService.findVisitsByPetId(1);
+	}*/
 
 }

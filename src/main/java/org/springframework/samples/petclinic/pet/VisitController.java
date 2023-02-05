@@ -17,6 +17,7 @@ package org.springframework.samples.petclinic.pet;
 
 import java.util.Map;
 
+import ch.qos.logback.core.model.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.owner.Owner;
 import org.springframework.samples.petclinic.owner.OwnerRepository;
@@ -76,6 +77,12 @@ public class VisitController {
 									  BindingResult result) {
 		return visitService.processNewVisitForm(owner, petId, visit, result);
 
+	}
+
+	@GetMapping("/visits/recent")
+	public String findTop4ByOrderByDateDesc(Model model) {
+		visitService.findLatestVisits();
+		return "visits/list";
 	}
 
 }

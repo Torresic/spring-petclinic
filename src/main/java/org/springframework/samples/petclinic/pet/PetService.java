@@ -1,18 +1,25 @@
 package org.springframework.samples.petclinic.pet;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.owner.Owner;
 import org.springframework.samples.petclinic.owner.OwnerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class PetService {
+	@Autowired
+	PetRepository petRepository;
+
+	@Autowired
+	VisitRepository visitRepository;
+
 	private static final String VIEWS_PETS_CREATE_OR_UPDATE_FORM = "pets/createOrUpdatePetForm";
 	private final OwnerRepository owners;
 
@@ -73,4 +80,18 @@ public class PetService {
 	public Collection<PetType> populatePetTypes() {
 		return this.owners.findPetTypes();
 	}
+
+	public Pet findById(long l) {
+		return null;
+	}
+
+	/*public List<Pet> findPetsBornIn2010() {
+		LocalDate start = LocalDate.of(2010, 1, 1);
+		log.i("");
+		return petRepository.findByBirthDate(start);
+	}*/
+
+	/* public List<Visit> findVisitsByPetId(Integer petId) {
+		return visitRepository.findByPetId(petId);
+	}*/
 }
