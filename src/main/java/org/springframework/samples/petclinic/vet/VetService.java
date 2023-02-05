@@ -21,6 +21,18 @@ public class VetService {
 		return vets;
 	}
 
+	public Page<Vet> findByLastName(String lastName, Pageable pageable) {
+		return vetRepository.findByLastName(lastName, pageable);
+	}
+
+	public Page<Vet> findByFirstOrLastName(String firstName, String lastName ,Pageable pageable) {
+		return vetRepository.findByFirstOrLastName(lastName, firstName ,pageable);
+	}
+
+	public Page<Vet> findByFirstAndLastName( String firstName , String lastName, Pageable pageable) {
+		return vetRepository.findByFirstAndLastName( firstName , lastName, pageable);
+	}
+
 	public Page<Vet> findPaginated(int page) {
 		int pageSize = 5;
 		Pageable pageable = PageRequest.of(page - 1, pageSize);

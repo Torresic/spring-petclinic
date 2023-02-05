@@ -15,12 +15,12 @@
  */
 package org.springframework.samples.petclinic.vet;
 
-import java.util.List;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author Ken Krebs
  * @author Arjen Poutsma
  */
+@Slf4j
 @Controller
 class VetController {
 
@@ -50,12 +51,42 @@ class VetController {
 		return vetService.showVetList(page, model);
 	}
 
-	private String addPaginationModel(int page, Page<Vet> paginated, Model model) {
-		return vetService.addPaginationModel(page, paginated, model);
+	// Información de uso http://localhost:8080/filterLastName?lastName=Douglas
+	@GetMapping("/filterLastName")
+	public ResponseEntity<String> filterVets(@RequestParam("lastName") String lastName) {
+		Pageable pageable = PageRequest.of(0, 10);
+		Page<Vet> filteredVets = vetService.findByLastName(lastName, pageable);
+		StringBuilder response = new StringBuilder();
+
+		return ResponseBase(filteredVets, response);
 	}
 
-	private Page<Vet> findPaginated(int page) {
-		return vetService.findPaginated(page);
+	@GetMapping("/filterOr")
+	public ResponseEntity<String> filterVetsByFirstOrLastName(@RequestParam("lastName") String lastName, @RequestParam("firstName") String firstName) {
+		Pageable pageable = PageRequest.of(0, 10);
+		Page<Vet> filteredVets = vetService.findByFirstOrLastName(firstName, lastName, pageable);
+		StringBuilder response = new StringBuilder();
+
+		return ResponseBase(filteredVets, response);
+	}
+
+	@GetMapping("/filterAnd")
+	public ResponseEntity<String> filterVetsByFirstAndLastName(@RequestParam("lastName") String lastName, @RequestParam("firstName") String firstName) {
+		Pageable pageable = PageRequest.of(0, 10);
+		Page<Vet> filteredVets = vetService.findByFirstAndLastName(firstName, lastName, pageable);
+		StringBuilder response = new StringBuilder();
+
+		return ResponseBase(filteredVets, response);
+	}
+
+
+
+	private ResponseEntity<String> ResponseBase(Page<Vet> filteredVets, StringBuilder response) {
+		for (Vet v : filteredVets) {
+			log.info("Vet: " + v.getFirstName());
+			response.append(v.getFirstName()).append(" ").append(v.getLastName()).append("\n");
+		}
+		return ResponseEntity.ok(response.toString());
 	}
 
 	@GetMapping({ "/vets" })

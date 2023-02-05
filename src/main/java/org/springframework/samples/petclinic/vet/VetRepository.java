@@ -19,8 +19,10 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.samples.petclinic.owner.Owner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
@@ -56,7 +58,20 @@ public interface VetRepository extends Repository<Vet, Integer> {
 	@Cacheable("vets")
 	Page<Vet> findAll(Pageable pageable) throws DataAccessException;
 
+	@Query("SELECT DISTINCT vet FROM Vet vet WHERE vet.lastName LIKE :lastName% ")
+	@Transactional(readOnly = true)
+	Page<Vet> findByLastName(@Param("lastName") String lastName, Pageable pageable);
+
+	@Query("SELECT DISTINCT vet FROM Vet vet WHERE vet.lastName LIKE :lastName% AND vet.firstName LIKE :firstName%")
+	@Transactional(readOnly = true)
+	Page<Vet> findByFirstAndLastName(@Param("lastName") String lastName, @Param("firstName") String firstName, Pageable pageable);
+
+	@Query("SELECT DISTINCT vet FROM Vet vet WHERE vet.lastName LIKE :lastName% OR vet.firstName LIKE :firstName%")
+	@Transactional(readOnly = true)
+	Page<Vet> findByFirstOrLastName(@Param("lastName") String lastName, @Param("firstName") String firstName, Pageable pageable);
+
 	void save(Vet vet);
+
 
 	Vet findById(@Param("id") Integer id);
 

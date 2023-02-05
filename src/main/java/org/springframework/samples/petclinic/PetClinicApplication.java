@@ -22,11 +22,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportRuntimeHints;
-import org.springframework.samples.petclinic.vet.Specialty;
-import org.springframework.samples.petclinic.vet.SpecialtyRepository;
-import org.springframework.samples.petclinic.vet.Vet;
-import org.springframework.samples.petclinic.vet.VetRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.samples.petclinic.vet.*;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.stream.Collectors;
 
 /**
  * PetClinic Spring Boot Application.
@@ -38,6 +40,11 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootApplication
 @ImportRuntimeHints(PetClinicRuntimeHints.class)
 public class PetClinicApplication {
+	private final VetService vetService;
+
+	public PetClinicApplication(VetService vetService) {
+		this.vetService = vetService;
+	}
 
 	/*
 	 * 1. Crear objeto Vet sin Speciality 2. Persistir el objeto Vet en BBDD 3. Consultar
@@ -55,7 +62,7 @@ public class PetClinicApplication {
 	@Bean
 	public CommandLineRunner demoVetRepository(VetRepository vetRepository, SpecialtyRepository specialtyRepository) {
 		return (args) -> {
-			log.info("*****************************************************");
+			/* log.info("*****************************************************");
 			log.info("BOOTCAMP - Spring y Spring Data - vetRepository");
 			log.info("*****************************************************");
 			log.info("Creamos un objeto Vet");
@@ -69,17 +76,17 @@ public class PetClinicApplication {
 			Vet vetAux = vetRepository.findById(vet.getId());
 			log.info(vetAux.toString());
 			log.info("Editamos el objeto y añadimos una Speciality");
-			/*Specialty s = specialtyRepository.findById(1);
+			Specialty s = specialtyRepository.findById(1);
 			log.info("Vet: " + s);
-			vet.addSpecialty(s);*/
+			vet.addSpecialty(s);
 			vetRepository.save(vet);
 			log.info(vet.toString());
 			log.info("Listamos todos los veterinarios");
 			for (Vet v : vetRepository.findAll()) {
 				log.info("Vet: " + v.getFirstName());
 				System.out.println("Vet: " + v.getFirstName());
-			}
-
+			} */
+			
 		};
 	}
 
