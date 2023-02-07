@@ -16,16 +16,14 @@
 
 package org.springframework.samples.petclinic;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportRuntimeHints;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.samples.petclinic.pet.Pet;
 import org.springframework.samples.petclinic.pet.PetService;
 import org.springframework.samples.petclinic.pet.VisitService;
@@ -33,7 +31,7 @@ import org.springframework.samples.petclinic.vet.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
-import java.util.stream.Collectors;
+
 
 /**
  * PetClinic Spring Boot Application.
@@ -44,7 +42,9 @@ import java.util.stream.Collectors;
 @Slf4j
 @SpringBootApplication
 @ImportRuntimeHints(PetClinicRuntimeHints.class)
+@OpenAPIDefinition(info = @Info(title = "ProductStore API", version = "2.0", description = "ProductStore Information"))
 public class PetClinicApplication {
+
 	private final VetService vetService;
 
 	@Autowired

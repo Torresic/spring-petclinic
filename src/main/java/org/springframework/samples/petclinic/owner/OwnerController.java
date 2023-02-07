@@ -18,6 +18,11 @@ package org.springframework.samples.petclinic.owner;
 import java.util.List;
 import java.util.Map;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
@@ -75,6 +80,8 @@ class OwnerController {
 	}
 
 	@GetMapping("/owners")
+	@Operation(summary = "Obtiene la lista de dueños")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Lista de dueños", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Long.class))})})
 	public String processFindForm(@RequestParam(defaultValue = "1") int page, Owner owner, BindingResult result,
 			Model model) {
 		return ownerService.processFindForm(page, owner, result, model);
@@ -89,6 +96,8 @@ class OwnerController {
 	}
 
 	@GetMapping("/owners/{ownerId}/edit")
+	@Operation(summary = "Edita un dueño en especifico")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Dueño editado", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Long.class))})})
 	public String initUpdateOwnerForm(@PathVariable("ownerId") int ownerId, Model model) {
 		return ownerService.initUpdateOwnerForm(ownerId, model);
 	}

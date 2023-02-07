@@ -18,6 +18,11 @@ package org.springframework.samples.petclinic.pet;
 import java.util.Map;
 
 import ch.qos.logback.core.model.Model;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.owner.Owner;
 import org.springframework.samples.petclinic.owner.OwnerRepository;
@@ -80,6 +85,8 @@ public class VisitController {
 	}
 
 	@GetMapping("/visits/recent")
+	@Operation(summary = "Obtiene la lista de visitas")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Lista de visitas", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Long.class))})})
 	public String findTop4ByOrderByDateDesc(Model model) {
 		visitService.findLatestVisits();
 		return "visits/list";

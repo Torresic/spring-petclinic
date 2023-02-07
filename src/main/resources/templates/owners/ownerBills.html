@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'bills')}">
+<head>
+  <title>Bills List</title>
+</head>
+<body>
+<h2>Bills List</h2>
+<table>
+  <tr>
+    <th>Date</th>
+    <th>Amount</th>
+    <th>Owner ID</th>
+  </tr>
+  <tr th:each="bill : ${bills}">
+    <td th:text="${bill.creationDate}"></td>
+    <td th:text="${bill.totalAmount}"></td>
+    <td th:text="${bill.ownerId}"></td>
+  </tr>
+</table>
+</body>
+</html>
